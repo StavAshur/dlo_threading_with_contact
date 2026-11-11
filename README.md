@@ -61,3 +61,6 @@
 
 - resseting the F/T forces (tare) is done with the command:
     rosservice call /bus0/ft_sensor0/reset_wrench "{desired_wrench: {force:  {x: 0.0, y: 0.0, z: 0.0}, torque: {x: 0.0, y: 0.0, z: 0.0}}}"
+
+- Getting the reading is done with the command:
+    rostopic echo /bus0/ft_sensor0/ft_sensor_readings/wrench
