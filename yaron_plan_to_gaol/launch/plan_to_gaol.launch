@@ -1,0 +1,9 @@
+<launch>
+    <arg name="run_time" default="30.0" />
+
+    <node name="add_walls_node" pkg="yaron_plan_to_gaol" type="add_walls.py" output="screen" />
+
+    <node name="random_mover_node" pkg="yaron_plan_to_gaol" type="random_mover.py" output="screen">
+        <param name="duration" value="$(arg run_time)" />
+    </node>
+</launch>
