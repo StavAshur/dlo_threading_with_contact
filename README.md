@@ -1,3 +1,6 @@
+Robot: Yaskawa Motoman sda10f
+Controller: fs100
+
 - Switch to anagement mode SYSTEM INFO (main menu) -> SECURITY, password is 99999999
 
 - When an error pops in the pendant use CANCEL key (top right of the pendant next to SELECT) to continue
@@ -38,6 +41,7 @@
 
 ================== Bota sensor ==========================
 
+Model: BOTA SenseONE EtherCat force/torque sensor 
 
 - Had to install a driver which I got here https://wiki.ros.org/bota_driver with the command:
     sudo apt install ros-noetic-bota-driver
@@ -68,8 +72,10 @@
 
 
 ================== Zed camera ==========================
+Model: Zed2 
 
-- In order to use the camera need to install SDK
+
+- In order to use the camera need to install Zed SDK
 
 - The Zed repository zed-ros-wrapper can be found in:
     https://github.com/stereolabs/zed-ros-wrapper
