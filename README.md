@@ -64,3 +64,15 @@
 
 - Getting the reading is done with the command:
     rostopic echo /bus0/ft_sensor0/ft_sensor_readings/wrench
+
+
+
+================== Zed camera ==========================
+
+- In order to use the camera need to install SDK
+
+- The Zed repository zed-ros-wrapper can be found in:
+    https://github.com/stereolabs/zed-ros-wrapper
+
+- Activating the depth viewer (for testing) can be done using the command:
+    /usr/local/zed/tools/ZED_Depth_Viewer
