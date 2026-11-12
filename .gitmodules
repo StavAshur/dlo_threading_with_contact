@@ -1,0 +1,9 @@
+[submodule "motoman"]
+	path = motoman
+	url = https://github.com/ros-industrial/motoman.git
+[submodule "robotiq"]
+	path = robotiq
+	url = https://github.com/ros-industrial/robotiq.git
+[submodule "zed-ros-wrapper"]
+	path = zed-ros-wrapper
+	url = https://github.com/stereolabs/zed-ros-wrapper.git

@@ -1,0 +1,14 @@
+<launch>
+  <!-- Wrapper around the vendor launch file. The vendor file hard-codes
+       ethercat_bus=enx3c8cf8ea282c (a USB adapter on Bota's test PC) and ignores the command-line arg,
+       so we include it unchanged and override that one parameter afterwards (later <param> wins). -->
+  <arg name="ethercat_bus" default="enp2s0" doc="network interface the Bota sensor is plugged into"/>
+  <!-- The vendor file declares the placeholder 'BFT-xxx-xx-xx-xx'; the driver checks it against the device
+       and logs an 'Invalid product name' error. This sensor reports BFT-SENS-ECAT-M8. -->
+  <arg name="product_name" default="BFT-SENS-ECAT-M8"/>
+
+  <include file="$(find rokubimini_ethercat)/launch/rokubimini_ethercat.launch"/>
+
+  <param name="bus0/ethercat_bus" type="string" value="$(arg ethercat_bus)"/>
+  <param name="bus0/rokubiminis/ft_sensor0/product_name" type="string" value="$(arg product_name)"/>
+</launch>
