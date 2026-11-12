@@ -81,8 +81,23 @@ Everything ROS runs in [box]. Open a NEW [box] terminal after any build.
     rosservice call /bus0/ft_sensor0/reset_wrench "{desired_wrench: {force: {x: 0.0, y: 0.0, z: 0.0}, torque: {x: 0.0, y: 0.0, z: 0.0}}}"
 
 
-================== ZED camera ==========================
-- NOT set up on this PC (current ZED SDK needs an NVIDIA GPU with compute capability >= 7.5; this PC has a GT 730).
+================== Camera: RealSense D435 ==========================
+- Must be on a USB 3 link. Check [host]:
+    lsusb -t
+  The camera must show 5000M (480M = USB 2: unstable, no frames). Use the ZED 2's USB-C cable, plugged firmly into a rear USB 3 port.
+- Start the camera [box]:
+    roslaunch realsense2_camera rs_camera.launch
+- View the image [box, second terminal]:
+    rqt_image_view        (pick /camera/color/image_raw or /camera/depth/image_rect_raw)
+- Check frames arrive [box]:
+    rostopic hz /camera/color/image_raw
+- Topics: /camera/color/image_raw, /camera/color/camera_info, /camera/depth/image_rect_raw
+- One-time on a new PC [host], lets a normal user open the camera:
+    sudo cp ~/catkin_ws/env/udev/99-realsense.rules /etc/udev/rules.d/
+    sudo udevadm control --reload-rules && sudo udevadm trigger
+
+- ZED 2 / ZED Mini: NOT set up (current ZED SDK needs an NVIDIA GPU with compute capability >= 7.5; this PC has a GT 730).
+- Old ArUco script (aruco_zed_detector) still reads ZED topics and needs OpenCV >= 4.7: not adapted to the D435 yet.
 
 
 ================== Saving work (git) ==========================
