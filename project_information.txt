@@ -1,0 +1,92 @@
+Project: Yaskawa SDA10F ("Yaron") + Bota F/T sensor.  Quick operations guide.
+[host] = normal Ubuntu terminal.  [box] = inside the container (run `distrobox enter noetic` first).
+Everything ROS runs in [box]. Open a NEW [box] terminal after any build.
+
+
+================== Safety ==========================
+- Keep the E-stop within reach whenever the robot is connected to MoveIt.
+- Software cannot move the robot until /robot_enable is called (see "Robot: real").
+- Never leave the robot running unattended. Use TEACH mode or servos OFF when working near it.
+
+
+================== Container ==========================
+- Enter [host]:
+    distrobox enter noetic
+
+- Container broken/missing -> recreate [host] (3 commands, in order):
+    distrobox rm --force noetic
+    distrobox assemble create --file ~/catkin_ws/env/distrobox.ini
+    distrobox enter noetic -- bash -l ~/catkin_ws/env/build_ws.sh
+
+- Dockerfile changed -> rebuild image first [host], then recreate as above:
+    docker build -t local/ros-noetic-motoman:latest ~/catkin_ws/env
+
+- Rebuild workspace after code changes [box]:
+    cd ~/catkin_ws && catkin build
+
+- Brand new PC [host]:
+    sudo apt install docker.io distrobox
+    sudo usermod -aG docker $USER      (then log out and back in)
+    git clone git@github.com:StavAshur/yaron_env.git ~/catkin_ws/env
+    git clone git@github.com:StavAshur/dlo_threading_with_contact.git ~/catkin_ws/src
+    cd ~/catkin_ws/src && git submodule update --init
+    then: docker build ..., distrobox assemble create ..., build_ws.sh (the 3 commands above)
+  Full details: ~/catkin_ws/env/README.md
+
+
+================== Network ==========================
+- Robot controller: 192.168.255.3. PC and robot are both plugged into the switch. PC port on the switch: eno1.
+- PC needs this extra address on eno1 (one time, persistent) [host]:
+    nmcli connection modify netplan-eno1 +ipv4.addresses 192.168.255.100/24
+    nmcli connection up netplan-eno1
+- Check [host]:
+    ping 192.168.255.3
+- Bota sensor: plugged DIRECTLY into the PC port enp2s0. Never into the switch. enp2s0 needs no IP.
+
+
+================== Robot: simulation ==========================
+- RViz + MoveIt, no robot needed [box]:
+    roslaunch motoman_sda10f_moveit_config demo.launch
+
+
+================== Robot: real ==========================
+- 1. Power on controller, wait for the pendant main screen.
+  2. Check network [host]:  ping 192.168.255.3
+  3. View robot state only, no motion [box]:
+       roslaunch motoman_sda10f_support robot_state_visualize_sda10f.launch robot_ip:=192.168.255.3 controller:=fs100
+  4. RViz + MoveIt with live robot [box]:
+       roslaunch motoman_sda10f_moveit_config moveit_planning_execution.launch robot_ip:=192.168.255.3 controller:=fs100
+  5. Enable motion (before any move) [box]:
+       rosservice call /robot_enable
+     Disable:
+       rosservice call /robot_disable
+
+- Add collision walls (MoveIt must be running) [box]:
+    rosrun yaron_plan_to_gaol add_walls.py
+
+- Random-motion test, MOVES THE ROBOT (needs step 4 + walls) [box]:
+    roslaunch yaron_plan_to_gaol plan_to_gaol.launch run_time:=30.0
+
+- Pendant notes (speed, errors, management mode): see README.md
+
+
+================== F/T sensor (Bota) ==========================
+- Check the sensor is detected [box]:
+    sudo /opt/ros/noetic/bin/slaveinfo enp2s0
+- Start the sensor [box]:
+    roslaunch bota_ft_sensor bota.launch
+- Read force/torque [box, second terminal]:
+    rostopic echo /bus0/ft_sensor0/ft_sensor_readings/wrench
+- Zero (tare) the readings [box]:
+    rosservice call /bus0/ft_sensor0/reset_wrench "{desired_wrench: {force: {x: 0.0, y: 0.0, z: 0.0}, torque: {x: 0.0, y: 0.0, z: 0.0}}}"
+
+
+================== ZED camera ==========================
+- NOT set up on this PC (current ZED SDK needs an NVIDIA GPU with compute capability >= 7.5; this PC has a GT 730).
+
+
+================== Saving work (git) ==========================
+- Project code (this folder) [host]:
+    cd ~/catkin_ws/src && git add -A && git commit -m "message" && git push
+- Environment recipe [host]:
+    cd ~/catkin_ws/env && git add -A && git commit -m "message" && git push
