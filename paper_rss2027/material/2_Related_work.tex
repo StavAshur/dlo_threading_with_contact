@@ -1,0 +1,51 @@
+\section{Related work}
+\label{sec:related:work}
+
+\begin{itemize}
+
+    \item \cite{lvw-crcrisb-24}
+    \begin{itemize}
+        \item Use RL to push "compliant" objects (DLOs) into tunnels with unknown shapes.
+        \item Use F/T sensors.
+        \item Define a Dynamic Safety Lock (DSL) that computes forces acting on the EE in order to allow some pushing, but stop when feeling too much resistance.
+    \end{itemize}
+    
+    \item \cite{zdpp-dhattfmn-19}
+    \begin{itemize}
+        \item Use RL to guide a deformed DLO through a hole.
+        \item Use a 16-taxel tactile sensor.
+        \item Do not assume compliance or deform the DLO.
+    \end{itemize}
+    
+    \item \cite{wjly-cratmp-22}
+    \begin{itemize}
+        \item Build a library of tactile-guided primitives for DLO manipulation: cable following, pivoting, weaving, and insertion.
+        \item Use a GelSight sensor.
+        \item Specifically designed for the NIST Assembly Task Board.
+        \item Every primitive is a  a state machine. Transitions between states are triggered by tactile input.
+        \item Insertion is standard: push and move until a drop in force is felt and an increase in torque indicates rotation is impossible.
+    \end{itemize}
+    
+    \item \cite{slk-ftmdloeffi-22}
+    \begin{itemize}
+        \item Manipulation of DLO by tensioning the DLO, assuming it is straight when tensioned and gravity makes segments vertical.
+        \item Use F/T sensors to detect tension.
+        \item Provides an analytic model for DLO state estimation based on F/T readings.
+    \end{itemize}
+    
+    \item \cite{nkot-sditfw-97}
+    \begin{itemize}
+        \item Use a stereo camera and F/T sensor.
+        \item Straighten the free end of the DLO to allow insertion.
+        \item The insertion algorithm is fairly standard and uses both the camera and F/T sensor.
+        \item Discussion about deformation from contact with the environment is absent from the study.
+    \end{itemize}
+    
+    \item \cite{kr-aecsagphi-22}
+    \begin{itemize}
+        \item Solve the peg-in-hole insertion problem.
+        \item Use a GelSight sensor to estimate the contact line of the peg with the hole.
+        \item Feed the contact line into an RL model to determine the next action.
+    \end{itemize}
+
+\end{itemize}

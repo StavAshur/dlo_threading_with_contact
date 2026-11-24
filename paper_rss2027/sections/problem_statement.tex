@@ -1,0 +1,54 @@
+%% ============================================================================
+%% III. Problem Statement                                     target: ~0.5 page
+%% Stage 1: the problem statement must be fully developed (a concrete technical
+%% formulation, not a high-level argument).
+%% ============================================================================
+\section{Problem Statement}
+\label{sec:problem}
+
+\begin{figure}[t]
+  \centering
+  \figplaceholder{\linewidth}{3.6cm}{%
+    \textbf{Fig.~2 (notation).} Gripper pose $\gpose$, rod of length $L$,
+    contact at arc length $s_{\mathrm{c}}$ and ring angle $\cang$, wrist wrench
+    $\wrench$, tip pose $\tpose$, and target $\tposegoal$.}
+  \caption{Problem setup and notation.}
+  \label{fig:notation}
+\end{figure}
+
+\begin{outline}
+  \item \textbf{Object.} A naturally straight, superelastic Nitinol rod of
+    length $L$, modeled as an inextensible Kirchhoff rod under quasi-static
+    manipulation~\cite{bretl2014quasistatic}, grasped rigidly at one end; the
+    free tip carries a tool. \todo{Rod length, diameter, material constants.}
+  \item \textbf{Robot and sensing.} Gripper pose $\gpose\in\SE{3}$ ($\SE{2}$
+    in planar experiments) from forward kinematics; wrist wrench
+    $\wrench=(\vect{f},\vect{\tau})\in\R^{6}$ from a force/torque sensor; a
+    sensorized environment edge (ring) that reports contact and the contact
+    angle $\cang$ along the ring (\cref{fig:notation}).
+  \item \textbf{Contact.} The rod touches the edge at a single point at an
+    unknown arc length $s_{\mathrm{c}}\in(0,L)$; the edge applies an unknown
+    reaction force (normal and friction). \todo{Sticking vs.\ sliding contact;
+    friction model.}
+  \item \textbf{Observation} at time $t$: $\vect{o}_t=(\gpose,\wrench,\cpt)$,
+    where $\cpt$ holds the contact state and $\cang$. No vision is used during
+    execution; an RGB-D camera provides ground truth only.
+  \item \textbf{Reachability.} Let $\Rfree$ and $\Rcon$ be the sets of tip
+    poses reachable in the workspace $\mathcal{W}$ without and with an edge
+    contact, respectively.
+  \item \textbf{Assumptions.} Quasi-static motion, a single contact, known edge
+    geometry, deformation within the rod's elastic range.
+    \todo{Gravity: modeled or negligible?}
+\end{outline}
+
+\begin{problem}[Haptic tip-pose estimation]\label{prob:estimation}
+Given the observation $\vect{o}_t$, estimate the tip pose, $\tposehat\approx\tpose$.
+\end{problem}
+
+\begin{problem}[Contact-aided tip manipulation]\label{prob:manipulation}
+Given a target $\tposegoal\in\Rcon\setminus\Rfree$, find gripper motions that
+bring $\tpose$ to within position and orientation tolerances
+$(\epsilon_p,\epsilon_\theta)$ of $\tposegoal$ by using a contact with the
+edge, while avoiding other collisions and keeping the rod within its elastic
+range.
+\end{problem}

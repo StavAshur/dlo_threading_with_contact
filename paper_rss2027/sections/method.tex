@@ -1,0 +1,79 @@
+%% ============================================================================
+%% V. Methodology                                             target: ~1.3 pages
+%% Stage 1: the methodology must be fully developed, including the specific
+%% design choices in the system architecture and the experiments.
+%% ============================================================================
+\section{Methodology}
+\label{sec:method}
+
+\begin{figure}[t]
+  \centering
+  \figplaceholder{\linewidth}{3.2cm}{%
+    \textbf{Fig.~3 (pipeline).} Inputs $\gpose$, $\wrench$, $\cpt$
+    $\rightarrow$ tip-pose estimator $\rightarrow$ $\tposehat$ $\rightarrow$
+    contact-aware steering $\rightarrow$ gripper motion command.}
+  \caption{Overview of the approach.}
+  \label{fig:pipeline}
+\end{figure}
+
+\subsection{Contact as an ad-hoc joint}
+\label{sec:method:reach}
+\begin{outline}
+  \item Model the rod as a quasi-static Kirchhoff rod~\cite{bretl2014quasistatic};
+    the edge contact is a point constraint that transmits force but no moment,
+    \ie a passive joint whose location along the rod, $s_{\mathrm{c}}$, changes
+    as the rod is fed over the edge.
+  \item Compute $\Rfree$ and $\Rcon$ by sampling gripper poses in simulation
+    (\eg with discrete elastic rods~\cite{bergou2008der}) and validate on
+    hardware; this tests \ref{hyp:reach}.
+  \item \todo{Analytic result for the planar case (elastica)? Bound on the
+    achievable change in tip direction as a function of clearance.}
+\end{outline}
+
+\subsection{Sensorized edge}
+\label{sec:method:edge}
+\begin{outline}
+  \item Conductive TPU ring around the opening that reports contact and the
+    angular contact location $\cang$ along the ring.
+    \todo{Sensing principle, resolution, latency, calibration.}
+  \item Design choice: measure the contact location directly instead of
+    inferring it from kinematics or wrench (\cf~\cite{bajo2012kinematics}), to
+    isolate the value of contact information (\ref{hyp:estimate}).
+\end{outline}
+
+\subsection{Haptic tip-pose estimation}
+\label{sec:method:estimation}
+\begin{outline}
+  \item Learn $f_{\theta}:\vect{o}_t\mapsto\tposehat$ from data collected on
+    the real system (\cref{sec:experiments}); camera ground truth is used only
+    as training labels.
+  \item Inputs: $\gpose$, the tared and gravity-compensated wrench $\wrench$,
+    the contact state, and $\cang$. Outputs: tip position and direction
+    ($(x,y,\theta)$ in the planar case).
+  \item Candidate models to compare: MLP; a temporal model over a short history
+    (\eg 1D-CNN or GRU) to capture friction and hysteresis; a physics-informed
+    model that learns a residual on top of a rod-model
+    prediction~\cite{mishani2022realtime}. \todo{Final list of models.}
+  \item Loss: weighted position and orientation error; uncertainty from an
+    ensemble to gate the controller. \todo{Decide.}
+\end{outline}
+
+\subsection{Contact-aware steering}
+\label{sec:method:steering}
+\begin{outline}
+  \item Phases: (i) approach and make contact at a chosen edge location;
+    (ii) pivot about the contact to rotate the tip direction; (iii) feed the
+    rod to translate the tip to $\tposegoal$.
+  \item Closed loop on $\tposehat$: local Jacobian-based servoing (Jacobian
+    estimated online or from the learned model), with limits on contact force
+    and rod curvature. \todo{Alternative: sampling-based planning in simulation
+    with feedback correction.}
+\end{outline}
+
+\subsection{Implementation}
+\label{sec:method:implementation}
+\begin{outline}
+  \item ROS~1 (Noetic) with MoveIt for motion planning; synchronized logging of
+    joint states, wrench, contact signal, and camera frames.
+    \todo{Synchronization method and rates.}
+\end{outline}

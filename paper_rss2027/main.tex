@@ -1,0 +1,227 @@
+%% ============================================================================
+%%  Elastic Rod Manipulation Using a Contact Point
+%%  RSS 2027 submission -- main file (preamble, macros, title, abstract, sections)
+%%
+%%  Template: official RSS LaTeX template (IEEEtran.cls v1.7a + natbib/plainnat),
+%%  roboticsconference.org/docs/paper-template-latex.tar.gz, fetched 2026-11-24.
+%%  Do NOT change fonts, margins, spacing, or IEEEtran.cls: the CFP may
+%%  desk-reject submissions that alter the template formatting.
+%%
+%%  RSS 2027 two-stage process (roboticsconference.org/information/cfp/):
+%%   Stage 1  Extended Abstract, due Dec 4, 2026, 11:59pm AoE (OpenReview).
+%%            Max 5 pages of content (appendices count) + 1 page of references.
+%%            Problem statement, testable hypotheses, and methodology must be
+%%            fully developed; experiments may be missing or preliminary.
+%%            Related work: only the most direct citations. No supplementary
+%%            material; websites and appendices are not reviewed.
+%%   Stage 2  Final paper, due Apr 16, 2027 (if invited): max 8 pages excluding
+%%            references; executes the Extension Charter; complete related work
+%%            and experiments. Supplementary material (zip, 100MB) Apr 19, 2027.
+%%  Double-blind: no names, affiliations, acknowledgments, or links (not even
+%%  anonymous ones); anonymized PDF metadata; self-citations in third person;
+%%  no lab logos in photos.
+%%  Also: no page numbers, no "Draft"/"To appear" marks, Type-1 fonts only,
+%%  and no hallucinated references (checked automatically -> desk reject).
+%%
+%%  Build (draft, -> main.pdf):
+%%    latexmk -pdf main.tex
+%%  Build (anonymous, notes hidden, -> main_submission.pdf):
+%%    latexmk -pdf -jobname=main_submission -usepretex='\def\papermode{submission}' main.tex
+%%  With the Makefile: make | make submission | make check (pages, fonts, metadata)
+%% ============================================================================
+\documentclass[conference]{IEEEtran}
+
+%% ---------------------------------------------------------------------------
+%% Build mode: draft | submission | camera
+%%   draft       author names + TODO/author notes shown (default; this adds no
+%%               "Draft" marking to the PDF)
+%%   submission  anonymous author block and PDF metadata, notes hidden
+%%               (use for both RSS review stages)
+%%   camera      author names shown, notes hidden (camera-ready)
+%% Change the default here or override from the command line, e.g.
+%%   pdflatex "\def\papermode{submission}\input{main}"
+%% ---------------------------------------------------------------------------
+\providecommand*{\papermode}{draft}
+\newcommand*{\paperid}{[add your ID here]} % OpenReview paper ID (Stage 1)
+\newcommand*{\papertitle}{Elastic Rod Manipulation Using a Contact Point}
+
+%% ---------------------------------------------------------------------------
+%% Packages from the RSS template (hyperref is loaded further down, after the
+%% packages it must follow)
+%% ---------------------------------------------------------------------------
+\usepackage{times}
+% numbers option provides compact numerical references in the text.
+\usepackage[numbers]{natbib}
+\usepackage{multicol}
+
+%% ---------------------------------------------------------------------------
+%% Additional packages (none of them changes fonts, margins, or spacing)
+%% Avoid: subcaption/caption, enumitem, geometry, mathptmx/newtx, titlesec --
+%% they alter the IEEEtran layout.
+%% ---------------------------------------------------------------------------
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{bm}
+\usepackage{graphicx}
+\graphicspath{{figures/}}
+\usepackage[caption=false,font=footnotesize]{subfig} % IEEEtran-safe subfigures
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{siunitx}  % \SI{2}{\milli\metre}, \SI{5}{\degree}
+\usepackage{xcolor}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{xspace}
+\usepackage{etoolbox}
+
+\usepackage[bookmarks=true]{hyperref} % RSS template package
+\usepackage[capitalise]{cleveref}     % must come after hyperref
+\crefname{section}{Sec.}{Secs.}
+\crefname{subsection}{Sec.}{Secs.}
+\crefname{figure}{Fig.}{Figs.}
+\crefname{table}{Table}{Tables}
+\crefname{equation}{Eq.}{Eqs.}
+\crefname{algorithm}{Alg.}{Algs.}
+
+%% ---------------------------------------------------------------------------
+%% Build-mode switches
+%% ---------------------------------------------------------------------------
+\newif\ifanonymous
+\newif\ifshownotes
+\ifdefstring{\papermode}{submission}{\anonymoustrue\shownotesfalse}{%
+  \ifdefstring{\papermode}{camera}{\anonymousfalse\shownotesfalse}{%
+    \anonymousfalse\shownotestrue}}% draft (also the fallback)
+\typeout{*** Paper mode: \papermode}
+
+%% PDF metadata (must be anonymous in the review stages)
+\hypersetup{
+  pdftitle    = {\papertitle},
+  pdfkeywords = {deformable linear objects; elastic rods; contact; haptic sensing; manipulation},
+}
+\ifanonymous
+  \hypersetup{pdfauthor={}}
+\else
+  \hypersetup{pdfauthor={Stav Ashur, Yuval Cassuto, Avishai Sintov}}
+\fi
+
+%% ---------------------------------------------------------------------------
+%% Draft notes: visible only in draft mode, removed in submission/camera modes
+%% (do not also load the todonotes package: it defines \todo as well)
+%% ---------------------------------------------------------------------------
+\definecolor{notecolor}{RGB}{200,0,0}
+\definecolor{outlinecolor}{RGB}{0,70,150}
+\DeclareRobustCommand{\draftnote}[3]{%
+  \ifshownotes\textcolor{#1}{[\textbf{#2:} #3]}\else\ifhmode\unskip\fi\fi}
+\newcommand{\todo}[1]{\draftnote{notecolor}{TODO}{#1}}
+\newcommand{\stav}[1]{\draftnote{orange}{Stav}{#1}}
+\newcommand{\yuval}[1]{\draftnote{teal}{Yuval}{#1}}
+\newcommand{\avishai}[1]{\draftnote{violet}{Avishai}{#1}}
+
+%% Skeleton outlines: bullet lists of planned content. Replace each outline
+%% block with prose as you write; they stay blue in every mode so leftovers
+%% are easy to spot, and non-draft builds log how many are left.
+\newcounter{outlineblocks}
+\newenvironment{outline}{%
+  \stepcounter{outlineblocks}\par\color{outlinecolor}\begin{itemize}}%
+  {\end{itemize}}
+\AtEndDocument{\ifshownotes\else\ifnum\value{outlineblocks}>0
+  \typeout{WARNING: \arabic{outlineblocks} skeleton outline block(s) left in the paper}%
+\fi\fi}
+
+%% \figplaceholder{<width>}{<height>}{<description>}: framed stand-in for a
+%% figure that does not exist yet. Replace with \includegraphics{...}.
+\newcommand{\figplaceholder}[3]{%
+  \fbox{\parbox[c][#2][c]{\dimexpr #1-2\fboxsep-2\fboxrule\relax}{%
+    \centering\footnotesize\color{outlinecolor}#3}}}
+
+%% ---------------------------------------------------------------------------
+%% Hypotheses and problem statements
+%%   \begin{hypothesis}[Short name]\label{hyp:x} ... \end{hypothesis}
+%%   \ref{hyp:x} prints "H1", "H2", ...
+%% ---------------------------------------------------------------------------
+\newcounter{hypothesis}
+\renewcommand{\thehypothesis}{H\arabic{hypothesis}}
+\crefname{hypothesis}{hypothesis}{hypotheses}
+\newenvironment{hypothesis}[1][]{%
+  \par\smallskip\refstepcounter{hypothesis}\noindent
+  \textbf{\thehypothesis\ifstrempty{#1}{}{ (#1)}:}\hspace{0.5em}\itshape\ignorespaces}%
+  {\par\smallskip}
+\newtheorem{problem}{Problem}
+\crefname{problem}{Problem}{Problems}
+
+%% ---------------------------------------------------------------------------
+%% Notation
+%% ---------------------------------------------------------------------------
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\SE}[1]{\mathrm{SE}(#1)}
+\newcommand{\SO}[1]{\mathrm{SO}(#1)}
+\newcommand{\vect}[1]{\bm{#1}}
+\newcommand{\gpose}{\vect{T}_{\mathrm{g}}}          % gripper (end-effector) pose
+\newcommand{\tpose}{\vect{T}_{\mathrm{tip}}}        % DLO tip pose
+\newcommand{\tposehat}{\hat{\vect{T}}_{\mathrm{tip}}} % estimated tip pose
+\newcommand{\tposegoal}{\vect{T}^{*}_{\mathrm{tip}}} % target tip pose
+\newcommand{\wrench}{\vect{w}}                      % wrist F/T reading (f, tau)
+\newcommand{\cpt}{\vect{c}}                         % contact measurement
+\newcommand{\cang}{\phi_{\mathrm{c}}}               % contact angle on the ring
+\newcommand{\Rfree}{\mathcal{R}_{\mathrm{free}}}    % reachable set, no contact
+\newcommand{\Rcon}{\mathcal{R}_{\mathrm{c}}}        % reachable set, with contact
+
+\newcommand{\eg}{e.g.,\xspace}
+\newcommand{\ie}{i.e.,\xspace}
+\newcommand{\etal}{et~al.\xspace}
+\newcommand{\wrt}{w.r.t.\xspace}
+\newcommand{\cf}{cf.\xspace}
+
+\begin{document}
+
+\title{\papertitle}
+
+\ifanonymous
+  % Author block required by the RSS template for anonymous review
+  \author{Author Names Omitted for Anonymous Review. Paper-ID \paperid}
+\else
+  \author{\authorblockN{Stav Ashur, Yuval Cassuto, and Avishai Sintov}
+  \authorblockA{Tel Aviv University, Tel Aviv, Israel}}
+  % TODO (camera-ready): departments and e-mail addresses
+\fi
+
+\maketitle
+
+\begin{abstract}
+Sensors and devices such as cameras and brushes can be mounted on the tips of
+elastic rods and other deformable linear objects (DLOs), allowing them to be
+inserted into and manipulated within constrained spaces. Using the right
+contact point enables the DLO to reach poses that are infeasible when no
+contact with the environment is acceptable. Such a contact point serves as an
+ad-hoc joint, facilitating direction changes of the DLO's tip that are
+impossible if no collisions are tolerated. In this work, we propose the use of
+haptic sensors to perform manipulation that brings the tip of the DLO to a
+target pose in a constrained environment by utilizing a contact point of the
+DLO with an environment edge.
+\todo{Add 1--2 sentences on the hypotheses and methodology (vision-free tip-pose
+estimation from gripper pose, wrist force/torque, and contact location;
+contact-aware steering) and on the preliminary results.}
+\end{abstract}
+
+\IEEEpeerreviewmaketitle
+
+%% Sections, in order
+\input{sections/intro}
+\input{sections/related_work}
+\input{sections/problem_statement}
+\input{sections/hypotheses}
+\input{sections/method}
+\input{sections/experiments}
+\input{sections/conclusion}
+
+%% Acknowledgments are not allowed in the anonymous submission.
+\ifanonymous\else
+\section*{Acknowledgments}
+\todo{Funding and acknowledgments (camera-ready only).}
+\fi
+
+%% Use plainnat to work nicely with natbib (RSS template).
+\bibliographystyle{plainnat}
+\bibliography{references}
+
+\end{document}

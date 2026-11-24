@@ -1,0 +1,55 @@
+\section{Introduction}
+\label{sec:intro}
+
+Introduction
+
+\subsection{Angular threading}
+
+DLO manipulation includes several manipulation primitives, one of which is DLO threading in which an ungripped end of a DLO is routed through a narrow passage. 
+
+Existing literature contains several works performing this task in many ways, but, to the best of my knowledge, a gap exists in the literature on threading a DLO through a non-straight passage. The use of F/T and tactile sensors is abundant in the relevant literature due to the challenges DLOs pose to camera-based systems which is exacerbated by certain aspects of the threading problem \cite{kr-aecsagphi-22,nkot-sditfw-97,slk-ftmdloeffi-22,wjly-cratmp-22,zdpp-dhattfmn-19,lvw-crcrisb-24}.  
+
+First, when the DLOs end enters the passage all visibility of the DLO is lost, making vision-based deduction impossible. But even prior to that, threading involves moving the gripper very close to the passage, causing either the gripper itself or another part of the robot to obstruct the passage and the DLO.
+
+A single recent paper includes a non-straight passage, and deals with threading a compliant DLO through a passage whose exact shape is unknown \cite{lvw-crcrisb-24}. However, the passages in the paper do not contain angles larger than roughly $\pi/6$, and stresses the uncertain aspects of the threading rather the motion planning or control. I suggest addressing problem of threading a DLO through a passage with known shape that contains an angle.
+
+\paragraph{\textbf{Angular threading problem statement}} Given a robotic arm $r$ gripping a DLO in an environment $E$ containing an angular tunnel, find a motion plan for $r$ that will route the DLO's free end through the tunnel. See~\figref{main:a} for an illustration.
+
+\begin{figure}[t]
+    \centering
+    \subfloat[\figlab{main:a}]{
+        \includegraphics[width=0.45\linewidth,page=1]{figs/angled_tunnel.pdf}
+    }\hfill
+    \subfloat[\figlab{main:b}]{
+        \includegraphics[width=0.45\linewidth,page=2]{figs/angled_tunnel.pdf}
+    }   
+    \caption{
+    Threading a DLO through a curved tunnel may require activating forces in directions not allowed by a robot's kinematics. Using a contact point allows activation of forces in different directions. In \figref{main:b} we illustrate a robotic gripper threading a DLO through an angled tunnel by using a contact point of the DLO with the tunnel's entrance to push in a direction tangent to the contact point. The tangent is shown in red.
+    }
+    \figlab{main}
+\end{figure}
+
+The problem described above is straightforward, and as such usually has a straightforward solution. Instead of approaching the tunnel while orienting the DLO parallel to the tunnel's entrance, the orientation must be adjusted to the direction of the tunnel's angle. However, in some cases, the robot configurations which orient the DLO in such an angle are infeasible, either because they lie outside of the robot's reachable space, or because of environment obstacles.
+
+But, assuming that the DLO is elastic, the robot might be able to use the environment to orient the DLO and maneuver it in the desired direction. See \figref{main:b} for an example. This gives rise to the following problem statement:
+
+\paragraph{\textbf{Contact point DLO manipulation problem statement}} Given a robotic arm $r$ gripping an elastic DLO, an environment $E$, and a target pose $p$ (although not a full pose as it is a 5 DOF object), find a configuration of $r$ which places the DLO in contact with any object in $E$ such that the end of the DLO is in pose $p$.
+
+In order to solve this problem we must be able to accurately estimate the state of the DLO when it is in contact with the environment. Knowing where the contact point is will allow us to compute the required steps, either adjusting the current angle of the DLO's end or routing the DLO forward in its current orientation, to complete the mission.
+
+
+\subsection{DLO collision detection}
+
+Another gap that exists in the literature is DLO manipulation in constrained environments. This is likely due to the inherent challenge posed by DLO manipulation which is, as mentioned above, compounded by visibility obstructions. Reducing uncertainty to a level allowing effective manipulation requires DLO state estimation using tactile sensing. In this scenario. state estimation is a function of the forces exerted by the robot \emph{and} the environment, namely, collisions with obstacles. This motivates the problem statement below:
+
+\paragraph{\textbf{DLO collision detection}} Given a robotic arm $r$ gripping an elastic DLO $d$ with an associated parametric curve $\gamma(s)$, and an environment $E$ with a set of objects $O=\set{o_1,...,o_m}$ such that an unknown subset of obstacles $X\subseteq O$ is in contact with the DLO, find $X$ and $\gamma$. See \figref{dlo:collision} for an illustration.
+
+Solving this problem is a prerequisite for solving DLO manipulation in constrained or cluttered environments. 
+
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.7\linewidth]{figs/dlo_real_time_collision.pdf}
+    \caption{An illustration of a two grippers moving a DLO in a 2D environment causing it to collide with a disk object. The continued motion causes the DLO to deform.}
+    \figlab{dlo:collision}
+\end{figure}

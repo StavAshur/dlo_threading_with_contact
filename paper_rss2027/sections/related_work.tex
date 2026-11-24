@@ -1,0 +1,81 @@
+%% ============================================================================
+%% II. Related Work                                           target: ~0.5 page
+%% Stage 1: cite only the work most directly tied to the central problem (what
+%% is needed to establish novelty). Stage 2 requires a complete section.
+%% Anonymity: cite the authors' own prior work in the third person.
+%% RSS 2027 checks references automatically and desk-rejects hallucinated
+%% citations, so check every entry you add to references.bib.
+%% Merged with the notes in material/2_Related_work.tex (earlier document).
+%% ============================================================================
+\section{Related Work}
+\label{sec:related}
+
+\subsection{DLO state estimation without vision}
+\begin{outline}
+  \item Vision is the dominant modality for DLO perception and
+    manipulation~\cite{sanchez2018survey}, but it fails under the occlusions we
+    target. Force/torque (F/T) and tactile sensing are therefore common in DLO
+    insertion and
+    routing~\cite{kr-aecsagphi-22,nkot-sditfw-97,slk-ftmdloeffi-22,wjly-cratmp-22,zdpp-dhattfmn-19,lvw-crcrisb-24}.
+  \item For an elastic rod in static equilibrium, the shape is determined by
+    the wrench at one end~\cite{bretl2014quasistatic}; this enabled real-time,
+    vision-free shape estimation of a wire held by two arms from F/T
+    sensing~\cite{mishani2022realtime}.
+  \item \citet{slk-ftmdloeffi-22} manipulate a DLO by keeping it under tension,
+    assuming it is straight when tensioned and that gravity makes free segments
+    vertical; F/T readings detect the tension and feed an analytic model for
+    estimating the DLO state.
+  \item Gap: these works assume a contact-free rod held at both ends, or a DLO
+    kept taut. An environment contact that bends the rod adds an unknown
+    reaction force that breaks the wrench-to-shape mapping; we add the contact
+    location to recover it.
+\end{outline}
+
+\subsection{DLO insertion and threading}
+\begin{outline}
+  \item \citet{nkot-sditfw-97} insert a flexible wire using a stereo camera and
+    an F/T sensor, first straightening its free end; the insertion strategy is
+    standard, and deformation caused by contact with the environment is not
+    discussed.
+  \item Tight-tolerance threading of string and rope through
+    openings~\cite{wang2015online}; learned DLO insertion with flexibility
+    estimated from visual cues~\cite{lc-ldloilfevc-24}.
+  \item Tactile insertion: \citet{zdpp-dhattfmn-19} learn to guide a deformed
+    DLO through a hole using a 16-taxel tactile sensor, without assuming
+    compliance or deforming the DLO. \citet{wjly-cratmp-22} build a library of
+    tactile-driven primitives (cable following, pivoting, weaving, insertion)
+    using a GelSight sensor, designed for the NIST Assembly Task Board; each
+    primitive is a state machine whose transitions are triggered by tactile
+    input, and insertion is standard: push until the force drops and a rise in
+    torque shows that rotation is impossible. Tactile feedback also enables
+    following a cable in the grip~\cite{she2021cable}.
+  \item \citet{lvw-crcrisb-24} use reinforcement learning (RL) with F/T sensing
+    to push compliant objects, including DLOs, into tunnels of unknown shape; a
+    Dynamic Safety Lock computes the forces acting on the end effector to allow
+    some pushing but stops when the resistance is too high. This is the only
+    work we know of with non-straight passages, but its bends do not exceed
+    roughly $\pi/6$, and it addresses the uncertainty of the passage shape
+    rather than motion planning or control.
+  \item Gap: insertion either relies on vision or pushes along a straight or
+    mildly bent passage until the force changes; contact with the passage is
+    treated as resistance or uncertainty, not used to redirect the tip, so
+    angular threading behind an occluding edge is not addressed.
+\end{outline}
+
+\subsection{Exploiting environment contacts}
+\begin{outline}
+  \item Extrinsic dexterity uses external contacts to extend what a simple
+    gripper can do~\cite{dafle2014extrinsic}. For peg-in-hole insertion,
+    \citet{kr-aecsagphi-22} estimate the contact line between the peg and the
+    hole with a GelSight sensor and feed it to an RL model that selects the
+    next action.
+  \item For DLOs, environmental contacts and fixtures have been used to shape
+    cables~\cite{zhu2020environmental} and to manipulate them blindly with
+    force feedback~\cite{slk-ftmdloeffi-22}.
+  \item Contacts along slender elastic bodies can be detected and localized
+    from kinematics, as done for continuum robots~\cite{bajo2012kinematics}.
+  \item Gap: contacts are used to shape or hold the DLO body, or are sensed on a
+    rigid peg, not used as a joint for steering a \emph{free tip} to a target
+    pose with haptic feedback.
+    \todo{Confirm this novelty claim against recent work (2024--2026).}
+\end{outline}

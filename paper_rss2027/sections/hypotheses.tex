@@ -1,0 +1,56 @@
+%% ============================================================================
+%% IV. Hypotheses                                             target: ~0.4 page
+%% Stage-1 reviewers score (i) the value of the hypotheses and (ii) whether the
+%% planned evaluation can support OR falsify them. Make each hypothesis
+%% testable and state what result would refute it. Empirical hypotheses are OK.
+%% Reference them as \ref{hyp:...} (prints H1, H2, ...).
+%% ============================================================================
+\section{Hypotheses}
+\label{sec:hypotheses}
+
+\todo{Refine the wording and add quantitative thresholds once the setup is fixed.}
+
+\begin{hypothesis}[Reachability]\label{hyp:reach}
+Allowing a single contact between the rod and an environment edge strictly
+enlarges the set of reachable tip poses, in particular the range of tip
+directions, compared with contact-free manipulation in the same constrained
+workspace ($\Rfree\subsetneq\Rcon$).
+\end{hypothesis}
+\begin{outline}
+  \item Rationale: the contact acts as an ad-hoc joint (pivot), and its
+    location along the rod is controlled by feeding the rod over the edge.
+  \item Refuted if, for the tested clearances, the tip directions reachable
+    with contact do not exceed those reachable without it (simulation and
+    hardware).
+\end{outline}
+
+\begin{hypothesis}[Vision-free estimation]\label{hyp:estimate}
+Gripper pose, wrist wrench, and contact location suffice to estimate the tip
+pose without vision, and the contact location significantly reduces the error
+compared with gripper pose and wrench alone.
+\end{hypothesis}
+\begin{outline}
+  \item Rationale: without contact, the wrench at the gripped end determines
+    the rod's shape~\cite{bretl2014quasistatic,mishani2022realtime}; a contact
+    adds an unknown reaction force, and knowing where it acts recovers the
+    missing information.
+  \item Refuted if the tip error on unseen configurations exceeds the task
+    tolerance, or if adding the contact location gives no significant
+    improvement (input ablation, \cref{sec:experiments}).
+\end{outline}
+
+\begin{hypothesis}[Contact-aided steering]\label{hyp:steer}
+Closed-loop steering with the haptic tip-pose estimate brings the tip to
+target poses behind the edge with a higher success rate than contact-free and
+open-loop strategies.
+\end{hypothesis}
+\begin{outline}
+  \item Refuted if the success rate and final error are not better than those
+    of the baselines on the same targets.
+\end{outline}
+
+\begin{outline}
+  \item \textbf{Expected insights:} when contact helps and by how much (as a
+    function of rod stiffness, clearance, and contact location), and which
+    haptic signals carry the tip-pose information.
+\end{outline}

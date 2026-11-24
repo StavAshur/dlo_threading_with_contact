@@ -1,0 +1,66 @@
+%% ============================================================================
+%% I. Introduction                               target: ~0.75 page incl. Fig. 1
+%% Motivate the problem, state the gap, preview the hypotheses (Sec. IV) and
+%% the methodology (Sec. V), and list the contributions.
+%% ============================================================================
+\section{Introduction}
+\label{sec:intro}
+
+\begin{outline}
+  \item \textbf{Motivation.} Cameras, brushes, and other tools are mounted on
+    the tips of elastic rods and other DLOs and inserted into constrained
+    spaces, \eg for inspection and repair inside engines~\cite{dong2017slender}.
+    \todo{1--2 more application examples.}
+  \item \textbf{Challenge.} The rod's shape depends on mechanics that are hard
+    to model~\cite{sanchez2018survey}, and once inserted, the rod is hidden by
+    the environment or by the robot itself, so visual state estimation is
+    unreliable.
+  \item \textbf{Key idea.} Contact with the environment is usually avoided.
+    Instead, we use a contact point between the rod and an environment edge as
+    an \emph{ad-hoc joint}: pivoting about it changes the tip direction in ways
+    that are impossible if no collisions are tolerated (\cref{fig:teaser}).
+  \item \textbf{Problem.} Bring the tip of a gripped elastic rod to a target
+    pose in a constrained environment by exploiting a contact with an
+    environment edge, using only haptic sensing (robot proprioception, wrist
+    force/torque, contact location) during execution (\cref{sec:problem}).
+  \item \textbf{Approach.} A sensorized edge reports where the rod touches it;
+    a learned estimator maps gripper pose, wrench, and contact location to the
+    tip pose; a contact-aware controller steers the tip to the target
+    (\cref{sec:method}).
+\end{outline}
+
+% Fig. 1 is defined here, not at the top of the section, so that it lands at
+% the top of the right column of page 1. LaTeX puts a [t] float at the top of
+% the left column (above the abstract) if that column still has room when the
+% float is reached; if this happens after edits, move this block further down.
+\begin{figure}[t]
+  \centering
+  \figplaceholder{\linewidth}{4.2cm}{%
+    \textbf{Fig.~1 (teaser).} A robot grasps an elastic rod whose tip carries a
+    tool. The rod rests on an environment edge (sensorized ring) that acts as an
+    ad-hoc joint, letting the tip turn toward a target pose that is unreachable
+    without contact. Inset: reachable tip directions with vs.\ without contact.}
+  \caption{Using a contact point with an environment edge as an ad-hoc joint
+    lets the tip of a gripped elastic rod reach poses that are infeasible
+    without contact.}
+  \label{fig:teaser}
+\end{figure}
+
+\begin{outline}
+  \item \textbf{Hypotheses} (\cref{sec:hypotheses}): contact enlarges the set
+    of reachable tip poses (\ref{hyp:reach}); haptic signals suffice to estimate
+    the tip pose without vision (\ref{hyp:estimate}); closed-loop haptic
+    steering reaches targets that contact-free or open-loop strategies miss
+    (\ref{hyp:steer}).
+  \item \textbf{Contributions}:
+    \begin{itemize}
+      \item a formulation of DLO tip manipulation that uses a single
+        environment contact as an ad-hoc joint, with a reachability analysis;
+      \item a vision-free tip-pose estimator that uses proprioception,
+        force/torque, and contact location;
+      \item an experimental methodology and dataset with a Nitinol rod, from
+        planar (2D) to spatial (3D) settings;
+      \item preliminary results on the hypotheses.
+        \todo{Update after the experiments.}
+    \end{itemize}
+\end{outline}

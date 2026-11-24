@@ -1,0 +1,111 @@
+%% ============================================================================
+%% VI. Experimental Plan and Preliminary Results              target: ~1.3 pages
+%% Stage 1: experiments may be missing or preliminary, but the plan must show
+%% how each hypothesis will be supported or falsified (reviewers score the
+%% "feasibility of conclusion"). Stage 2: rename to "Experiments" and report
+%% the experiments required by the Extension Charter.
+%% Anonymity: no lab names or logos in photos or text.
+%% ============================================================================
+\section{Experimental Plan and Preliminary Results}
+\label{sec:experiments}
+
+\begin{figure}[t]
+  \centering
+  \figplaceholder{\linewidth}{4cm}{%
+    \textbf{Fig.~4 (setup).} Robot arm with wrist force/torque sensor and
+    gripper holding the Nitinol rod; sensorized ring (edge); RGB-D camera used
+    for ground truth only.}
+  \caption{Experimental setup.}
+  \label{fig:setup}
+\end{figure}
+
+\subsection{Setup}
+\label{sec:exp:setup}
+\begin{outline}
+  \item Yaskawa Motoman SDA10F (one arm), Bota SenseONE EtherCAT force/torque
+    sensor at the wrist, parallel gripper \todo{model}, Nitinol rod
+    \todo{length, diameter}, conductive-TPU sensorized ring, Intel RealSense
+    D435 RGB-D camera for ground truth only \todo{tip marker / tracking method}.
+  \item Planar (2D) experiments first, then spatial (3D).
+\end{outline}
+
+\subsection{Data collection and protocol}
+\label{sec:exp:protocol}
+\begin{outline}
+  \item Random and structured gripper trajectories that cover contact and
+    no-contact states over a range of deformations; each sample is
+    $(\gpose,\wrench,\cpt,\tpose)$.
+  \item Train/test split by trajectory (testing on unseen configurations);
+    repeated trials to quantify sensor noise and hysteresis.
+  \item Mitigations for sensor noise, inaccurate contact information, and
+    synchronization errors: force/torque tare and calibration, time
+    synchronization, camera--robot extrinsic calibration, repeated controlled
+    trials.
+  \item \todo{Dataset size, number of rods and edges, range of contact
+    locations.}
+\end{outline}
+
+\subsection{Metrics and baselines}
+\label{sec:exp:metrics}
+\begin{outline}
+  \item Estimation: tip position error [mm] and direction error [deg] on
+    held-out data.
+  \item Manipulation: success rate within $(\epsilon_p,\epsilon_\theta)$, final
+    error, time to target, peak contact force.
+  \item Baselines and ablations: inputs ($\gpose$; $\gpose{+}\wrench$;
+    $\gpose{+}\wrench{+}\cpt$); model comparison; a rod-model (physics)
+    estimator; contact-free and open-loop steering.
+\end{outline}
+
+\begin{table}[t]
+  \centering
+  \caption{How each hypothesis is tested}
+  \label{tab:plan}
+  \footnotesize
+  \begin{tabular}{@{}p{0.06\linewidth}p{0.40\linewidth}p{0.44\linewidth}@{}}
+    \toprule
+     & Experiment & Supported if / refuted if \\
+    \midrule
+    \ref{hyp:reach}    & Reachable tip directions with vs.\ without contact
+                         (simulation and hardware)
+                       & Larger range with contact / no gain \\
+    \ref{hyp:estimate} & Estimation error on unseen data; input ablation
+                       & Error within tolerance and significant gain from
+                         contact input / not \\
+    \ref{hyp:steer}    & Steering to targets behind the edge vs.\ baselines
+                       & Higher success, lower final error / not \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\subsection{Preliminary results}
+\label{sec:exp:prelim}
+
+\begin{table}[t]
+  \centering
+  \caption{Preliminary tip-pose estimation error (planar, held-out data)}
+  \label{tab:prelim}
+  \footnotesize
+  \begin{tabular}{@{}lcc@{}}
+    \toprule
+    Inputs & Position [mm] & Direction [deg] \\
+    \midrule
+    $\gpose$                    & -- & -- \\
+    $\gpose+\wrench$            & -- & -- \\
+    $\gpose+\wrench+\cpt$       & -- & -- \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\begin{outline}
+  \item \todo{First planar dataset: size, error statistics (\cref{tab:prelim}),
+    and what they suggest about \ref{hyp:estimate}.}
+  \item \todo{Reachability in simulation for \ref{hyp:reach}.}
+\end{outline}
+
+\subsection{Planned experiments (Stage 2)}
+\label{sec:exp:planned}
+\begin{outline}
+  \item Spatial (3D) experiments; closed-loop steering trials
+    (\ref{hyp:steer}); generalization to other rods and edge geometries.
+\end{outline}
