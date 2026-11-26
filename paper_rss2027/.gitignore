@@ -14,3 +14,5 @@
 *.toc
 # anonymous build output (regenerate with `make submission`)
 main_submission.pdf
+# reference papers kept locally, not committed
+material/*.pdf

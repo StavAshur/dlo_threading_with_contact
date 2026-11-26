@@ -42,6 +42,7 @@
 %%   pdflatex "\def\papermode{submission}\input{main}"
 %% ---------------------------------------------------------------------------
 \providecommand*{\papermode}{draft}
+%\providecommand*{\papermode}{submission}
 \newcommand*{\paperid}{[add your ID here]} % OpenReview paper ID (Stage 1)
 \newcommand*{\papertitle}{Elastic Rod Manipulation Using a Contact Point}
 
@@ -206,13 +207,13 @@ contact-aware steering) and on the preliminary results.}
 \IEEEpeerreviewmaketitle
 
 %% Sections, in order
-\input{sections/intro}
-\input{sections/related_work}
-\input{sections/problem_statement}
-\input{sections/hypotheses}
-\input{sections/method}
-\input{sections/experiments}
-\input{sections/conclusion}
+\input{sections/1_intro}
+\input{sections/2_related_work}
+\input{sections/3_preliminaries}
+\input{sections/4_hypotheses}
+\input{sections/5_method}
+\input{sections/6_experiments}
+\input{sections/7_conclusion}
 
 %% Acknowledgments are not allowed in the anonymous submission.
 \ifanonymous\else

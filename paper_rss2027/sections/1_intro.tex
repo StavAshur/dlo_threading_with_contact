@@ -6,7 +6,25 @@
 \section{Introduction}
 \label{sec:intro}
 
+
+Deformable linear objects (DLOs) are objects whose measure along a single dimension, commonly referred to as the object's length, is far greater than the that of the other dimensions. This class includes several classes of items and materials such as ropes, wires, and cables, widely used in industrial, medical, and domestic domains, making DLO manipulation an important step for automation. The Different subsets of DLOs differ on their mechanical properties -- resistance to deformation along and around the different axes, elasticity, and plasticity -- which determine the usefulness of each subset for different purposes. 
+
+Elastic rods are DLOs with relatively high elasticity and resistance to external forces, and low plasticity. This makes elastic rods useful for directional devices that need to be navigated through constrained environments, and resist gravity to maintain their orientation. These include, for example, cameras, thermometers, and brushes. DLO manipulation in these settings is complex. Identifying a DLO using a camera under sub-optimal lighting conditions and in the presence of clutter is a hard task, and, in some cases, becomes impossible due to environment objects.  
+
+In this paper we propose a framework for handling elastic rods by utilizing a contact point of the DLOs with the environment. We hypothesize that given a robotic arm grasping an elastic rod that is in contact with a single point in the environment, i.e., an edge of an object, haptic measurements obtained by force/torque (F/T) or tactile sensors and propreioception data are sufficient for computationally estimating the pose of the DLO's tip. We further hypothesize that a small number of motion primitives can be constructed, and those will allow the manipulation of the DLO and, through that, planning for its tip in a constrained environment with no vision of the tip itself. 
+
+The manuscript is organized as follows. In Section \ref{sec:related} we give a short survey of the literature on DLO estimation and manipulation, with an emphasis on work using F/T and tactile sensors, and motion planning that utilizes objects in the environment. In Section \ref{sec:Preliminaries} we lay out mathematical notations and define terms required for the next sections and formally describe the problem addressed in this paper. Finally, in Sections \ref{sec:hypotheses}, \ref{sec:method}, and \ref{sec:experiments} we give a detailed account of our hypotheses, algorithmic approach, and the experimental evaluation process designed to gather the evidence that will either prove or refute the hypotheses, respectively. 
+
+
+
+
+
+
+
+
+
 \begin{outline}
+	
   \item \textbf{Motivation.} Cameras, brushes, and other tools are mounted on
     the tips of elastic rods and other DLOs and inserted into constrained
     spaces, \eg for inspection and repair inside engines~\cite{dong2017slender}.

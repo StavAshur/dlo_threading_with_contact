@@ -10,6 +10,18 @@
 \section{Related Work}
 \label{sec:related}
 
+
+
+Manipulation of DLOs has applications in a wide range of human activities \cite{zhu_challenges_2021}, and has been a very active field of robotics  research in recent years \cite{sanchez_robotic_2018,caporali2026robotic}. A large,  body of work has been dedicated to estimating \cite{10167643,11248900,11568531} or tracking \cite{9928322,dinkel_dlo-splatting_2025,caporali2025robotic} the state of DLOs as a prerequisite for manipulations tasks. However, this work relies heavily on cameras which struggle with capturing the thin DLOs in the presence of clutter or when occlusions occur \cite{cop2021new}. For this reason, some recent works combine visual and haptic sensors when working with DLOs~\cite{nadon_multi-modal_2018,pecyna_visual-tactile_2022,11246285,11482717,caporali2026vision}. 
+
+It is well-established that haptic information can provide quality information regarding the state of grasped DLOs \cite{bretl2014quasistatic,ms-lcwrtsemp-23,monguzzi2024force} and is even sufficient for manipulation under certain constraints \cite{smbb-mpdamer-20,slk-ftmdloeffi-22}. This observation is especially important for insertion and threading tasks where grasped objects, not necessarily DLOs, are routed through constrained spaces where they are partially or fully obstructed from cameras by the environment and the robot. Haptic information has been successfully used in the non-deformable object insertion task to complement camera input \cite{caporali2026vision} or as the main sensing modality \cite{kamijo2026tactile}. When DLOs are involved, contact of the object with the environment carries information about the state of the object as well as its alignment, thus increasing the significance of haptic sensors. Tactile sensors are used in \cite{de2018integration} and \cite{zanella2019dlo} to estimate the DLO's mechanical properties for the insertion process. In \cite{lvw-crcrisb-24}, A F/T sensor is used to guide a DLO through short tunnels whose shape is unknown. Another work introduces several DLO routing primitives, including insertion, that utilize haptic sensors \cite{wjly-cratmp-22}.   
+
+Contact-aided motion planning is mostly useful for soft continuum and soft robots that can use the environment to change their orientation \cite{marchese2016dynamics,rao2024towards}. Due to the wide use of continuum robots in medical settings, e.g., surgical needles and catheters, work specific to this domain has been the focus of recent work \cite{ng2025contact,11373832}.Another brand of contact-aided planning is bracing for articulated robots, that is, using contact with the environment to reduce the torque forces on a robot \cite{fang2019exploitation,natarajan2023torque}.
+
+
+%\cite{yu2024whisker} A survey of whisker sensors fo environment perception.
+
+
 \subsection{DLO state estimation without vision}
 \begin{outline}
   \item Vision is the dominant modality for DLO perception and
